@@ -151,4 +151,23 @@
 	status = "okay";
 };
 
+&i2c0 {
+    status = "okay";
+    dtt@48 {
+        compatible = "national,lm75";
+        reg = <0x48>;
+    };
+    eeprom@28 {
+        compatible = "at,24c08";
+        reg = <0x28>;
+    };
+};
+
+&i2c1 {
+    status = "okay";
+    eeprom@50 {
+        compatible = "at,24c08";
+        reg = <0x50>;
+    };
+};
 
