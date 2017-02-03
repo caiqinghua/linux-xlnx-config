@@ -233,7 +233,7 @@
 				#size-cells = <0x1>;
                 partition@nand-whole {
 					label = "whole";
-					reg = <0x0 0xfb20000>;
+					reg = <0x0 0xfb80000>;
 					read-only;
 				};
 				partition@nand-fsbl-bit-uboot {
