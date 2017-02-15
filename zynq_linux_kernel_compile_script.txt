@@ -1,0 +1,221 @@
+sudo /opt/Xilinx/SDK/2016.2/bin/xsdk
+/bin/hello.elf "/dev/ttyS2" "3000000" "100"
+
+export PATH=/opt/Xilinx/SDK/2016.2/gnu/arm/lin/bin:$PATH
+export CROSS_COMPILE=arm-xilinx-linux-gnueabi-
+export PATH=/home/lin/code/xilinx/u-boot-xlnx/tools:$PATH
+make ARCH=arm xilinx_zynq_defconfig
+make ARCH=arm UIMAGE_LOADADDR=0x8000 uImage
+cp arch/arm/boot/uImage /mnt/hgfs/download/xilinx/
+
+make ARCH=arm dtbs
+cp arch/arm/boot/dts/zynq-zed.dtb /mnt/hgfs/download/xilinx/devicetree.dtb
+
+
+#mac-ubuntu
+export PATH=/opt/Xilinx/SDK/2016.2/gnu/arm/lin/bin:$PATH
+export CROSS_COMPILE=arm-xilinx-linux-gnueabi-
+export PATH=/home/lin/xilinx/u-boot-xlnx-xilinx-v2016.3/tools:$PATH
+make ARCH=arm xilinx_zynq_defconfig
+make ARCH=arm UIMAGE_LOADADDR=0x8000 uImage
+cp arch/arm/boot/uImage /mnt/hgfs/download/xilinx/
+
+make ARCH=arm dtbs
+cp arch/arm/boot/dts/zynq-zed.dtb arch/arm/boot/dts/devicetree.dtb
+
+
+
+
+
+download ramdisk.image.gz http://www.wiki.xilinx.com/Build+and+Modify+a+Rootfs
+gunzip ramdisk.image.gz
+chmod u+rwx ramdisk.image
+sudo mount -o loop ramdisk.image tmp_mnt/
+sudo cp ~/workspace/hello/Debug/hello.elf tmp_mnt/bin
+sudo umount tmp_mnt/
+gzip ramdisk.image
+mkimage -A arm -T ramdisk -C gzip -d ramdisk.image.gz uramdisk.image.gz
+sudo cp uramdisk.image.gz /mnt/hgfs/download/xilinx/
+
+gunzip ramdisk.image.gz
+chmod u+rwx ramdisk.image
+sudo mount -o loop ramdisk.image tmp_mnt/
+sudo cp -rf ~/bin/cgminer/opt/cgminer tmp_mnt/opt/
+sudo umount tmp_mnt/
+gzip ramdisk.image
+mkimage -A arm -T ramdisk -C gzip -d ramdisk.image.gz uramdisk.image.gz
+sudo cp uramdisk.image.gz /mnt/hgfs/download/xilinx/
+
+
+google: bin hello.elf not found
+readelf -l hello.elf|grep "program interpreter"
+      [Requesting program interpreter: /lib/ld-linux-armhf.so.3]
+
+http://unix.stackexchange.com/questions/18061/why-does-sh-say-not-found-when-its-definitely-there
+
+http://stackoverflow.com/questions/16935168/cross-compile-helloworld-for-arm
+Putting the link lib/ld-linux.so.3 to lib/arm-linux-gnueabihf/ld-2.15.so
+
+solution:
+cd lib
+ln -s ld-2.13.so ld-linux-armhf.so.3
+
+
+
+configure:3992: arm-xilinx-linux-gnueabi-gcc -V >&5
+arm-xilinx-linux-gnueabi-gcc: error: unrecognized command line option '-V'
+arm-xilinx-linux-gnueabi-gcc: fatal error: no input files
+
+
+google:ac_nonexistent.h: No such file or directory
+
+http://blog.sina.com.cn/s/blog_4885311301013otd.html
+在configure脚本生成编译环境时，在config.log中经常看到
+conftest.c:11:28: error: ac_nonexistent.h: No such file or directory
+这样的错误。
+其实是正常的，它是configure脚本用于检测编译器是否正常检查到include了一个不存在的文件。
+
+
+
+lin@ubuntu:~/code/cgminer-4.9.2$ sudo find / -name 'process.h'
+[sudo] password for lin: 
+/opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys/process.h
+/opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v5_01_a/src/include/sys/process.h
+/opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_3/src/include/sys/process.h
+
+lin@ubuntu:~/code/cgminer-4.9.2$ sudo find / -name 'config_param.h'
+/opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/config/config_param.h
+/opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v5_01_a/src/include/config/config_param.h
+/opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_3/src/include/config/config_param.h
+
+
+lin@ubuntu:~/code/cgminer-4.9.2$ sudo apt-get install libcurl-dev
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+Package libcurl-dev is a virtual package provided by:
+  libcurl4-openssl-dev 7.35.0-1ubuntu2.8
+  libcurl4-nss-dev 7.35.0-1ubuntu2.8
+  libcurl4-gnutls-dev 7.35.0-1ubuntu2.8
+You should explicitly select one to install.
+
+
+
+cgminer.c:52:23: fatal error: curl/curl.h: No such file or directory
+ #include <curl/curl.h>
+
+sudo apt-get install libcurl4-gnutls-dev
+
+lin@ubuntu:~/code/cgminer-4.9.2$ sudo find / -name 'curl.h'
+/usr/include/curl/curl.h
+
+
+ error: size of array '__curl_rule_01__' is negative    __curl_rule_01_
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install libcurl4-gnutls-dev:i386
+
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" LDFLAGS="-L lcurl" ./configure --host=arm-xilinx-linux-gnueabi --enable-icarus
+
+CFLAGS="-O2 -Wall -I /home/lin/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" LDFLAGS="-L/home/lin/lib" ./configure --host=arm-xilinx-linux-gnueabi --enable-icarus
+
+
+ranlib: command not found
+
+arm-xilinx-linux-gnueabi-ranlib
+arm-xilinx-linux-gnueabi-ranlib
+
+ make install时"arm-linux-ranlib command not found" 
+http://blog.csdn.net/wang_walfred/article/details/38900393
+执行make install之前，先用下su命令取得root权限。然后再执行make install。
+
+su, error is same
+
+./configure --prefix=/opt --host=arm-xilinx-linux-gnueabi
+
+solution: change install location
+./configure --prefix=/home/lin/curl --host=arm-xilinx-linux-gnueabi
+make
+make install
+
+
+checking for LIBCURL... no
+checking for LIBCURL... no
+configure: error: Missing required libcurl dev >= 7.18.2
+
+http://stackoverflow.com/questions/16246352/how-do-i-specify-ldflags-and-cppflags-for-configure
+
+lin@ubuntu:~/code/cgminer-4.9.2$ export LIBCURL_LIBS=-L/home/lin/curl/lib
+lin@ubuntu:~/code/cgminer-4.9.2$ export LIBCURL_CFLAGS=-I/home/lin/curl/include
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --enable-icarus
+
+checking for LIBCURL... yes
+checking libudev.h usability... no
+checking libudev.h presence... no
+checking for libudev.h... no
+configure: error: "udev support requested but libudev not installed"
+configure: error: ./configure failed for compat/libusb-1.0
+
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --enable-icarus --with-system-libusb
+
+Configuration Options Summary:
+
+  libcurl(GBT+getwork).: Enabled: -L/home/lin/lib
+  libsystemd...........: Disabled
+  curses.TUI...........: NOT FOUND. TUI support DISABLED
+
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --enable-icarus --disable-libusb
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --enable-icarus --disable-libusb --with-system-jansson
+
+export LIBCURL_LIBS=-L/home/lin/curl/lib
+export LIBCURL_CFLAGS=-I/home/lin/curl/include
+export JANSSON_LIBS=-L/home/lin/lib/jansson/lib
+export JANSSON_CFLAGS=-I/home/lin/lib/jansson/include
+
+CFLAGS="-O2 -Wall -I/home/lin/lib/jansson/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --prefix=/opt/cgminer --enable-icarus --disable-libusb --disable-libcurl
+
+
+export LIBCURL_LIBS=-L/home/lin/curl/lib
+export LIBCURL_CFLAGS=-I/home/lin/curl/include
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --prefix=/opt/cgminer --enable-icarus --disable-libusb --disable-libcurl
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --prefix=/opt/cgminer --enable-ants2 --disable-libusb --disable-libcurl
+
+google: ../libtool: line 1085: arm-xilinx-linux-gnueabi-ranlib: command not found
+http://www.friendlyarm.net/forum/topic/5516
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --prefix=/opt/cgminer --enable-ants2 --disable-libusb --disable-libcurl
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --prefix=/opt/cgminer --enable-ants2 --disable-libusb --disable-libcurl --debug
+
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include -I /opt/Xilinx/SDK/2016.2/data/embeddedsw/lib/bsp/xilkernel_v6_2/src/include/sys" ./configure --host=arm-xilinx-linux-gnueabi --prefix=/opt/cgminer --enable-icarus --disable-libcurl --disable-udev
+
+CFLAGS="-O2 -Wall -I /opt/Xilinx/SDK/2016.2/gnu/arm/lin/arm-xilinx-linux-gnueabi/libc/usr/include/linux" ./configure --host=arm-xilinx-linux-gnueabi
+
+/opt/Xilinx/SDK/2016.2/gnu/arm/lin/arm-xilinx-eabi/include/machine/termios.h
+/opt/Xilinx/SDK/2016.2/gnu/arm/lin/arm-xilinx-eabi/include/termios.h
+
+/opt/Xilinx/SDK/2016.2/gnu/arm/lin/arm-xilinx-linux-gnueabi/libc/usr/include/linux/termios.h
+/opt/Xilinx/SDK/2016.2/gnu/arm/lin/arm-xilinx-linux-gnueabi/libc/usr/include/asm/termios.h
+/opt/Xilinx/SDK/2016.2/gnu/arm/lin/arm-xilinx-linux-gnueabi/libc/usr/include/sys/termios.h
+/opt/Xilinx/SDK/2016.2/gnu/arm/lin/arm-xilinx-linux-gnueabi/libc/usr/include/asm-generic/termios.h
+/opt/Xilinx/SDK/2016.2/gnu/arm/lin/arm-xilinx-linux-gnueabi/libc/usr/include/bits/termios.h
+/opt/Xilinx/SDK/2016.2/gnu/arm/lin/arm-xilinx-linux-gnueabi/libc/usr/include/termios.h
+
+google:linux custom baud rate
+https://sourceware.org/bugzilla/show_bug.cgi?id=10339#c0
+On Linux-systems, the baud constant BOTHER is defined/used to handle
+non-standard baudrates:
+if the baudrate in field c_cflag of the termios-structure is set to BOTHER, the
+fields c_ispeed/c_ospeed are interpreted as the baud rate value directly.
+
+I've sent a message to the help-mailing-list and Carlos O'Donell confirmed that
+BOTHER is currently not supported. He suggested to file this bug-report.
+
