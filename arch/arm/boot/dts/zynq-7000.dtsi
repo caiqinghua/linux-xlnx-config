@@ -231,7 +231,7 @@
 				reg = <0xe1000000 0x1000000>;
 				#address-cells = <0x1>;
 				#size-cells = <0x1>;
-                partition@nand-whole {
+				partition@nand-whole {
 					label = "whole";
 					reg = <0x0 0xfb80000>;
 					read-only;

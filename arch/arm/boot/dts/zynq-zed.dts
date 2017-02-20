@@ -161,6 +161,33 @@
         compatible = "at,24c08";
         reg = <0x28>;
     };
+    i2c-switch@70 {
+        compatible = "nxp,pca9542";
+        #address-cells = <1>;
+        #size-cells = <0>;
+        reg = <0x70>;
+
+        channel@0 {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <0>;
+            tmp423@4c {
+                compatible = "ti,tmp423";
+                reg = <0x4c>;
+            };
+        };
+
+        channel@1 {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <1>;
+
+            tmp423@4c {
+                compatible = "ti,tmp423";
+                reg = <0x4c>;
+            };
+        };
+    };
 };
 
 &i2c1 {
