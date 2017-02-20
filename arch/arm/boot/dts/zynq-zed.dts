@@ -166,6 +166,65 @@
         #address-cells = <1>;
         #size-cells = <0>;
         reg = <0x70>;
+        i2c-mux-idle-disconnect;
+
+        i2c@0 {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <0>;
+            tmp423@4c {
+                compatible = "ti,tmp423";
+                reg = <0x4c>;
+            };
+        };
+
+        i2c@1 {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <1>;
+
+            tmp423@4c {
+                compatible = "ti,tmp423";
+                reg = <0x4c>;
+            };
+        };
+    };
+
+    i2c-switch@71 {
+        compatible = "nxp,pca9542";
+        #address-cells = <1>;
+        #size-cells = <0>;
+        reg = <0x71>;
+        i2c-mux-idle-disconnect;
+
+        i2c@0 {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <0>;
+            tmp423@4c {
+                compatible = "ti,tmp423";
+                reg = <0x4c>;
+            };
+        };
+
+        i2c@1 {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <1>;
+
+            tmp423@4c {
+                compatible = "ti,tmp423";
+                reg = <0x4c>;
+            };
+        };
+    };
+
+    i2c-switch@72 {
+        compatible = "nxp,pca9542";
+        #address-cells = <1>;
+        #size-cells = <0>;
+        reg = <0x72>;
+        i2c-mux-idle-disconnect;
 
         i2c@0 {
             #address-cells = <1>;
