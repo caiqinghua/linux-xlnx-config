@@ -167,7 +167,7 @@
         #size-cells = <0>;
         reg = <0x70>;
 
-        channel@0 {
+        i2c@0 {
             #address-cells = <1>;
             #size-cells = <0>;
             reg = <0>;
@@ -177,7 +177,7 @@
             };
         };
 
-        channel@1 {
+        i2c@1 {
             #address-cells = <1>;
             #size-cells = <0>;
             reg = <1>;
